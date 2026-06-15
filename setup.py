@@ -32,7 +32,7 @@ Topic :: Utilities
 
 doclines = __doc__.split("\n")
 
-print doclines
+print(doclines)
 
 if sys.version_info < (2, 3):
     _setup = setup
