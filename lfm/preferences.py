@@ -5,6 +5,7 @@ from os.path import exists
 from shutil import copyfile
 from configparser import ConfigParser
 from collections import OrderedDict
+import copy
 import json
 
 from utils import get_lfm_data_file_contents, ConfigParserWithComments, get_public_actions
@@ -375,7 +376,7 @@ def dump_keys_to_file(keys):
 ##### History
 class History(dict):
     def __init__(self):
-        self._data = HISTORY_BLANK
+        self._data = copy.deepcopy(HISTORY_BLANK)
 
     def __getitem__(self, key):
         return self._data[key]
@@ -385,7 +386,7 @@ class History(dict):
 
     def delete(self):
         log.info('Delete history')
-        self._data = HISTORY_BLANK
+        self._data = copy.deepcopy(HISTORY_BLANK)
         self.save()
 
     def load(self):
