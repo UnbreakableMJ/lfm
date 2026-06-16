@@ -1452,7 +1452,7 @@ class TreeView:
                 if self.tree.pos == 0 or self.tree.is_first_sibling:
                     continue
                 newpos = self.tree.pos - 1
-            elif ch in (ord('j'), ord('j'), curses.KEY_DOWN):
+            elif ch in (ord('j'), ord('J'), curses.KEY_DOWN):
                 if self.tree.pos == len(self.tree)-1 or self.tree.is_last_sibling:
                     continue
                 newpos = self.tree.pos + 1

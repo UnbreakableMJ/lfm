@@ -215,7 +215,7 @@ class BaseFolder:
     def basename(self):
         return basename(self.path_str[:-len(VFS_STRING)] if self.path_str.endswith(VFS_STRING) else self.path_str)
 
-    def prepare_paths(adir, rel):
+    def prepare_paths(self, adir, rel):
         """Method called to initiale paths.
         'adir' is str, 'rel' is str"""
         raise NotImplementedError
@@ -347,7 +347,7 @@ class CompressedFileFolder(BaseFolder):
         log.debug('Preparing VFS: {}'.format(self))
         c = get_compressed_file_engine(self.base.replace(VFS_STRING, ''))
         if c is None:
-            raise
+            raise UserWarning('Cannot uncompress this file type: {}'.format(self.base_filename))
         st, res, err = ProcessCommand('Creating VFS', self.base_filename,
                                       c.cmd_uncompress, path=self.rbase).run()
         if st == -100: # stopped by user
@@ -391,7 +391,7 @@ class CompressedFileFolder(BaseFolder):
         log.debug('Rebuilding VFS: {}'.format(self))
         c = get_compressed_file_engine(self.base.replace(VFS_STRING, ''))
         if c is None:
-            raise
+            raise UserWarning('Cannot uncompress this file type: {}'.format(self.base_filename))
         _, tmpfile = mkstemp(suffix='.lfm')
         st, res, err = ProcessCommand('Rebuilding VFS', self.base_filename,
                                       c.cmd_compress2('*', tmpfile), path=self.rbase).run()

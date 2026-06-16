@@ -412,9 +412,9 @@ def copy_file(filename, basepath, destdir, overwrite=False):
                 if err.errno != errno.EEXIST: # File exists
                     raise
             try:
-                st = os.lstat(src)
+                st = os.lstat(filename)
                 os.chown(dest, st[stat.ST_UID], st[stat.ST_GID])
-                copystat(src, dest, follow_symlinks=False)
+                copystat(filename, dest, follow_symlinks=False)
             except:
                 pass
         else:
@@ -550,10 +550,9 @@ def get_mountpoint_for_file(filename):
         for m, d, t in get_mount_points():
             if filename.find(m) != -1:
                 return (m, d, t)
-        else:
-            raise
     except:
-        return ('/', '<unknown>', '<unknown>')
+        pass
+    return ('/', '<unknown>', '<unknown>')
 
 
 ########################################################################
@@ -796,7 +795,7 @@ class ProcessCommand:
         self.dialog.show()
         results, errors = None, None
         self.proc = Popen(self.cmd, shell=True, cwd=self.path, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        if self.proc.poll(): # process can finish too fast
+        if self.proc.poll() is None: # process can finish too fast
             while True:
                 self.animation.next()
                 self.status = self.proc.poll()

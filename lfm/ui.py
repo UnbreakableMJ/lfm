@@ -590,8 +590,8 @@ class PowerCLI:
             try:
                 cmd2 = self.__replace_cli(cmd, f)
             except Exception as err:
-                log.warning('Cannot execute PowerCLI command: {}\n{}'.format(cmd2, str(err)))
-                DialogError('Cannot execute PowerCLI command:\n  {}\n\n{}'.format(cmd2, str(err)))
+                log.warning('Cannot execute PowerCLI command: {}\n{}'.format(cmd, str(err)))
+                DialogError('Cannot execute PowerCLI command:\n  {}\n\n{}'.format(cmd, str(err)))
             else:
                 if self.__run(cmd2, self.ui.pane_active.tab_active.dirname, mode) == -1:
                     self.ui.display()

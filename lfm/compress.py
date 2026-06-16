@@ -43,7 +43,7 @@ class PackagerBase:
         if isfile(self.path):
             if self.type in ('bz2', 'gz', 'xz', 'lz', 'lz4'):
                 return self.compress_cmd % self.filename
-            elif self.type in ('tbz2', 'tgz', 'txz', 'tlz', 'tlz4, ''tar'):
+            elif self.type in ('tbz2', 'tgz', 'txz', 'tlz', 'tlz4', 'tar'):
                 return # Don't use tar, it's a file
             else:
                 return self.compress_cmd % (self.filename, newfile)

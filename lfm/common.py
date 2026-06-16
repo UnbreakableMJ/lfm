@@ -10,8 +10,8 @@ from string import digits, ascii_lowercase
 ########################################################################
 ##### General
 AUTHOR = 'Iñigo Serna'
-VERSION = '3.0'
-DATE = '2001-17'
+VERSION = '3.1'
+DATE = '2001-2017'
 LFM_NAME = 'lfm - Last File Manager'
 
 CONFIG_DIR = os.path.abspath(os.path.expanduser('~/.config/lfm'))

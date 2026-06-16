@@ -56,8 +56,8 @@ try:
         for f in DOC_FILES:
             shutil.copy2(f, 'lfm/doc')
         os.symlink('../etc', 'lfm/etc')
-    except:
-        pass
+    except (OSError, shutil.Error) as err:
+        print('Warning: Could not stage doc/etc files: {}'.format(err))
     setup(name='lfm',
           version='3.1',
           description=__doc__.split("\n")[2],

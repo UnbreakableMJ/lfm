@@ -8,7 +8,7 @@ from common import *
 
 ########################################################################
 VALID_KEYS_1 = ascii_letters + digits + punctuation
-VALID_KEYS_2 = "up down left right pageup pagedown home end del ins backspace enter spc esc tab btab".split()
+VALID_KEYS_2 = "up down left right pageup pagedown home end del ins backspace enter spc esc tab backtab".split()
 VALID_KEYS_3 = ['f%d' % i for i in range(1, 25)]
 
 tbl_kstr_kcode = [('up', curses.KEY_UP),
@@ -54,7 +54,7 @@ for mod in tbl_mods:
         pair = mod+k, tbl_keysspecial[k][1]+tbl_mods[mod]-3
         tbl_aliases.append(pair)
 # S-F1: F13 ... S-F12: F24
-for i in range(0, 11):
+for i in range(0, 12):
     pair = 'S-F{}'.format(i+1), curses.KEY_F1+12+i
     tbl_aliases.append(pair)
 kmap_aliases_str2code = dict(tbl_aliases)
@@ -85,7 +85,7 @@ def key_str2bin(k):
         km = KeyModifier.control
         k = k[2:]
         if len(k) == 1:
-            return (KeyModifier.none, ord(k.lower())-ord('a')+1)
+            return (km, ord(k.lower())-ord('a')+1)
     elif k.startswith('A-'):
         km = KeyModifier.alt
         k = k[2:]

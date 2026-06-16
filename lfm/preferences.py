@@ -5,7 +5,7 @@ from os.path import exists
 from shutil import copyfile
 from configparser import ConfigParser
 from collections import OrderedDict
-import pickle
+import json
 
 from utils import get_lfm_data_file_contents, ConfigParserWithComments, get_public_actions
 from key_defs import key_str2bin, key_bin2str
@@ -150,7 +150,8 @@ class Config:
             for k, v in cp.items('Options'):
                 if k in DEF_OPTIONS:
                     try:
-                        exec('self.options.{} = {}'.format(k, v if k=='sort_type' else int(v)!=0))
+                        val = SortType[v.split('.')[-1]] if k == 'sort_type' else (int(v) != 0)
+                        setattr(self.options, k, val)
                     except:
                         log.warning('CONFIGURATION FILE: Invalid value "{}" for "{}" in Options section'.format(v, k))
                 else:
@@ -161,7 +162,7 @@ class Config:
             for k, v in cp.items('Confirmations'):
                 if k in DEF_CONFIRMATIONS:
                     try:
-                        exec('self.confirmations.{} = {}'.format(k, int(v)!=0))
+                        setattr(self.confirmations, k, int(v) != 0)
                     except:
                         log.warning('CONFIGURATION FILE: Invalid value "{}" for "{}" in Confirmations section'.format(v, k))
                 else:
@@ -174,7 +175,7 @@ class Config:
                     try:
                         if k == 'diff_type' and v not in ('context', 'unified', 'ndiff'):
                             raise ValueError
-                        exec('self.misc.{} = "{}"'.format(k, v))
+                        setattr(self.misc, k, v)
                     except:
                         log.warning('CONFIGURATION FILE: Invalid value "{}" for "{}" in Misc section'.format(v, k))
                 else:
@@ -246,6 +247,8 @@ def load_colortheme():
     if not cp.has_section('Colors'):
         log.warning('ColorTheme file corrupted, copying default')
         copy_default_colortheme_file()
+        cp = ConfigParser()
+        cp.read(THEME_FILE)
     # parse file
     colors = dict()
     rels = []
@@ -301,6 +304,8 @@ def load_keys():
     if not cp.has_section('Main'):
         log.warning('Keys file corrupted, copying default')
         copy_default_keys_file()
+        cp = ConfigParser()
+        cp.read(KEYS_FILE)
     # parse file
     public_api = get_public_actions()
     actions = dict()
@@ -385,13 +390,13 @@ class History(dict):
 
     def load(self):
         log.info('Load history file from "{}"'.format(HISTORY_FILE))
-        with open(HISTORY_FILE, 'rb') as f:
-            self._data = pickle.load(f)
+        with open(HISTORY_FILE, 'r') as f:
+            self._data = json.load(f)
 
     def save(self):
         log.info('Save history file to "{}"'.format(HISTORY_FILE))
-        with open(HISTORY_FILE, 'wb') as f:
-            pickle.dump(self._data, f, -1)
+        with open(HISTORY_FILE, 'w') as f:
+            json.dump(self._data, f)
 
     def append(self, section, new_entry):
         assert section in self._data.keys()
